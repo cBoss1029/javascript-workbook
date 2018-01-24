@@ -12,3 +12,64 @@ return dateTime;
 }
 
 findTime();
+
+//Write a JavaScript program to convert a number to a string.
+function makeAString(num){
+  return num.toString();
+}
+makeAString(5);
+
+//Write a JavaScript program to convert a string to the number.
+function stringToNumber(str){
+  return Number(str);
+}
+stringToNumber('42');
+
+/*Write a JavaScript program that takes in different datatypes and prints out whether they are a:
+Boolean
+Null
+Undefined
+Number
+NaN
+String*/
+
+function findType(arg){
+  return typeof arg;
+}
+findType('hello');
+
+//Write a JavaScript program that adds 2 numbers together.
+function sumOfTwoNums(num1, num2){
+  return num1 + num2;
+}
+sumOfTwoNums(5, 5);
+
+//Write a JavaScript program that runs only when 2 things are true.
+function bothMustBeTrue(arg1, arg2){
+  if (arg1 && arg2){
+    return 'Both are true!';
+  } else {
+    return 'Try again.';
+  }
+}
+bothMustBeTrue(1, true);
+
+//Write a JavaScript program that runs when 1 of 2 things are true.
+function oneMustBeTrue(arg1, arg2) {
+  if (arg1 || arg2){
+    return 'One is true!';
+  } else {
+    return 'Try again.';
+  }
+}
+oneMustBeTrue(0, true);
+
+//Write a JavaScript program that runs when both things are not true.
+function neitherCanBeTrue(arg1, arg2){
+  if (!arg1 && !arg2){
+    return 'Neither are true!';
+  } else {
+    return 'Try again.';
+  }
+}
+neitherCanBeTrue(0, false); 
