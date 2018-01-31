@@ -11,8 +11,8 @@ const rl = readline.createInterface({
 function rockPaperScissors(hand1, hand2) {
 
   // Write code here
-  hand1 = hand1.toLowerCase();
-  hand2 = hand2.toLowerCase();
+  hand1 = hand1.toLowerCase().trim();
+  hand2 = hand2.toLowerCase().trim();
 
   switch (hand1) {
     case 'rock':
@@ -35,7 +35,7 @@ function rockPaperScissors(hand1, hand2) {
           return 'Hand one wins!';
           break;
         case 'scissors':
-          return 'Hand two wins';
+          return 'Hand two wins!';
           break;
         case 'paper':
           return "It's a tie!";
@@ -66,7 +66,7 @@ function rockPaperScissors(hand1, hand2) {
 function getPrompt() {
   rl.question('hand1: ', (answer1) => {
     rl.question('hand2: ', (answer2) => {
-      console.log(rockPaperScissors(answer1, answer2));
+      console.log( rockPaperScissors(answer1, answer2) );
       getPrompt();
     });
   });
