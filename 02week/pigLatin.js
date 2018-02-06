@@ -6,12 +6,48 @@ const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
+/*First, write a function to scrub the string of white space, convert it to
+ lower case, and store the new string for use in later functions.*/
+
+
+let string;
+
+function scrubString(str) {
+  string = str.toLowerCase().trim();
+ return string;
+}
+
+/*Second, you need a function that searches the string for vowels and returns
+ the index number of the first vowel it finds. I feel it would be better to
+ write a small regex for this to avoid having to write a loop with a conditional
+  statement for each vowel.*/
+
+function findVowelIndex(str){
+  const re = /[aeiou]/g;   /*regular expression, the characters in the brackets
+ are what you’re searching for, the “g” tells it to search the whole string.*/
+
+  scrubString(str);   //scrub whitespace and convert to lower case
+
+  return string.search(re);   /*this searches the string for characters that
+  match the ones in the regex (vowels in this case), and returns the index
+  number of the first match*/
+}
+
 
 
 function pigLatin(word) {
 
   // Your code here
+  findVowelIndex(word);
+    if (findVowelIndex(word)=== 0){
+      return string + 'yay';   /*if the string begins with a vowel, just add
+      ‘yay’ to the end*/
 
+    } else {
+      return string.substring(findVowelIndex(word), string.length)
+      + string.substring(0, findVowelIndex(word)) + 'ay';   /*move everything
+      before the first vowel to the end of the string and ad 'ay'*/
+    }
 }
 
 
