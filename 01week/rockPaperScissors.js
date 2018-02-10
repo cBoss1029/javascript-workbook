@@ -11,13 +11,62 @@ const rl = readline.createInterface({
 function rockPaperScissors(hand1, hand2) {
 
   // Write code here
+  hand1 = hand1.toLowerCase();
+  hand2 = hand2.toLowerCase();
 
+  switch (hand1) {
+    case 'rock':
+      switch (hand2) {
+        case 'paper':
+          return 'Hand two wins!';
+          break;
+        case 'scissors':
+          return 'Hand one wins!';
+          break;
+        case 'rock':
+          return "It's a tie!";
+          break;
+      }
+
+      break;
+    case 'paper':
+      switch (hand2) {
+        case 'rock':
+          return 'Hand one wins!';
+          break;
+        case 'scissors':
+          return 'Hand two wins';
+          break;
+        case 'paper':
+          return "It's a tie!";
+          break;
+      }
+
+      break;
+    case 'scissors':
+      switch (hand2) {
+        case 'paper':
+          return 'Hand one wins!';
+          break;
+        case 'rock':
+          return 'Hand two wins!';
+          break;
+        case 'scissors':
+          return "It's a tie!";
+          break;
+
+      }
+      break;
+    default:
+      return 'Invalid input.';
+
+  }
 }
 
 function getPrompt() {
   rl.question('hand1: ', (answer1) => {
     rl.question('hand2: ', (answer2) => {
-      console.log( rockPaperScissors(answer1, answer2) );
+      console.log(rockPaperScissors(answer1, answer2));
       getPrompt();
     });
   });
