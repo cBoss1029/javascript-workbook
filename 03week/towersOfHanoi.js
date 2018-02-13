@@ -78,4 +78,27 @@ const getPrompt = () => {
   });
 }
 
-getPrompt();
+
+// Tests
+
+if (typeof describe === 'function') {
+
+  describe('#towersOfHanoi()', () => {
+    it('should move a piece from one stack to another', () => {
+      towersOfHanoi('a', 'b');
+      assert.deepEqual(stacks, { a: [4, 3, 2], b: [1], c: [] });
+    });
+    it('should make sure a move is legal', () => {
+      stacks = { a: [4, 3, 2], b: [1], c: [] }
+      assert.equal(isLegal('a', 'b'), false);
+    });
+    it('should check for a win', () => {
+      stacks = { a: [], b: [4, 3, 2, 1], c: [] };
+      assert.equal(checkForWin(), 'You win!');
+    });
+  });
+} else {
+
+  getPrompt();
+
+}
