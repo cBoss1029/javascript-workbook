@@ -65,3 +65,14 @@ const currencyAndRate = (obj) => {
 }
 currencyAndRate(latestExchangeRate.rates);
 //create a function that takes in an object and console logs the result of the object's multiplyByTen method on each of the exchange rates. Use latestExchangeRate as an example to test your function
+const timesTen = (obj) => {
+  let arr = [];
+  for (let x in obj){
+    arr.push(obj[x]);
+  }
+  console.log(arr);
+  arr.forEach((num)=>{
+    console.log(latestExchangeRate.multiplyByTen(num));
+  })
+}
+timesTen(latestExchangeRate.rates);
