@@ -7,6 +7,13 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
+/* objective: move 4 stacked pieces from one 'tower' to another ending in the same order they started.
+rules:
+-can only move one piece at a time
+-can only stack a piece on top another piece of higher value
+-game is over when whole stack is moved to another 'tower' and is in the same
+order it started as [4, 3, 2, 1]*/
+
 let stacks = {
   a: [4, 3, 2, 1],
   b: [],
@@ -25,6 +32,11 @@ const resetStacks = () => {
     c: []
   };
 }
+
+/*move pieces:
+-take two parameters (startStack, endStack)
+-.pop() last value off of startStack, store it
+-.push() stored value to endStack*/
 const movePiece = (startStack, endStack) => {
   // Your code here
   const pieceToMove = stacks[startStack].pop();
@@ -32,6 +44,12 @@ const movePiece = (startStack, endStack) => {
 
 }
 
+/*check if move is legal:
+-two parameters (startStack, endStack)
+-if endStack is empty, return true
+-if endStack is not empty, compare values of the last object in startStack
+ and the last value of endStack. If the last value of endStack
+ is greater than the last value of startStack, return true. Otherwise return false.*/
 const isLegal = (startStack, endStack) => {
   // Your code here
   if (stacks[endStack].length === 0) {
@@ -47,6 +65,9 @@ const isLegal = (startStack, endStack) => {
   }
 }
 
+/*Assuming all moves are legal, a win happens when all four pieces are in either
+stack b or c. To check for a win, check the length of stacks b and c.  If the length
+of either one is equal to the number of pieces (4), then the game is won.*/
 const checkForWin = () => {
   // Your code here
   if (stacks.b.length === 4 || stacks.c.length === 4) {
