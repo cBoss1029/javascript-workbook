@@ -58,5 +58,10 @@ const getAvailableCurrencies = () => {
 }
 getAvailableCurrencies();
 // create a function that console logs a string with the currency and the currency rate for each currency in a given object. For example, 'AUD is at a 1.2742 conversion rate'. Use latestExchangeRate as an example to test your function
-
+const currencyAndRate = (obj) => {
+  for (let x in obj) {
+    console.log(`${x} is at a ${obj[x]} conversion rate`);
+  }
+}
+currencyAndRate(latestExchangeRate.rates);
 //create a function that takes in an object and console logs the result of the object's multiplyByTen method on each of the exchange rates. Use latestExchangeRate as an example to test your function
