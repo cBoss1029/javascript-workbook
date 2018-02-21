@@ -10,9 +10,11 @@ const rl = readline.createInterface({
 
 function Checker() {
   // Your code here
+  this.symbol = 'B';
 }
 
 function Board() {
+
   this.grid = [];
   // creates an 8x8 array, filled with null values
   this.createGrid = function() {
@@ -21,7 +23,8 @@ function Board() {
       this.grid[row] = [];
       // push in 8 columns of nulls
       for (let column = 0; column < 8; column++) {
-        this.grid[row].push(null);
+        const checker = new Checker();
+        this.grid[row].push(checker);
       }
     }
   };
