@@ -17,6 +17,13 @@ class Ship {
     this.ability = ability;
     this.crew = [];
   }
+  missionStatement() {
+    if (this.crew) {
+      return this.ability;
+    } else {
+      return "Can't perform a mission yet.";
+    }
+  }
 }
 
 class CrewMember {
@@ -26,12 +33,33 @@ class CrewMember {
     this.specialSkill = specialSkill;
     this.ship = null;
   }
+  enterShip(ship) {
+     console.log(jobTypes[this.job])
+     if (jobTypes[this.job]===ship.type){
+       this.ship = ship;
+       ship.crew.push(this);
+       return `${this} has boarded ${ship.name}`;
+     } else if (this.job === 'programmer') {
+       this.ship = ship;
+       ship.crew.push(this);
+       return `${this} has boarded ${ship.name}`;
+     } else {
+       return `${this.name} is only authorized to board ${jobTypes[this.job]}.`;
+     }
+  }
 }
+let crewMember1 = new CrewMember('Rick Martinez', 'pilot', 'chemistry');
+let crewMember2 = new CrewMember('Commander Lewis', 'commander', 'geology');
+let crewMember3 = new CrewMember('Pvt. Hudson', 'mechanic', 'comic relief');
+let crewMember4 = new CrewMember('Ray Arnold', 'programmer', 'biology');
+let mav = new Ship('Mars Ascent Vehicle', 'MAV', "Ascend into low orbit");
+let hermes = new Ship('Hermes', 'Main Ship', "Interplanetary Space Travel");
+let sulaco = new Ship('Sulaco', 'Repair Ship', "I fix the ships!")
 //tests
 if (typeof describe === 'function'){
   describe('CrewMember', function(){
     it('should have a name, a job, a specialSkill and ship upon instantiation', function(){
-      var crewMember1 = new CrewMember('Rick Martinez', 'pilot', 'chemistry');
+      let crewMember1 = new CrewMember('Rick Martinez', 'pilot', 'chemistry');
       assert.equal(crewMember1.name, 'Rick Martinez');
       assert.equal(crewMember1.job, 'pilot');
       assert.equal(crewMember1.specialSkill, 'chemistry');
