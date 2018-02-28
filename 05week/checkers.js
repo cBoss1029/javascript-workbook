@@ -8,29 +8,42 @@ const rl = readline.createInterface({
 });
 
 
-function Checker() {
+class Checker {
   // Your code here
-  this.symbol = 'B';
+  constructor() {
+    this.symbol1 = 'B';
+    this.symbol2 = 'A';
+  }
+
 }
 
-function Board() {
+class Board {
+  constructor() {
 
-  this.grid = [];
-  // creates an 8x8 array, filled with null values
-  this.createGrid = function() {
+    this.grid = [];
+    this.checkers = 24;
+    // creates an 8x8 array, filled with null values
+
+  }
+  createGrid() {
     // loop to create the 8 rows
     for (let row = 0; row < 8; row++) {
       this.grid[row] = [];
       // push in 8 columns of nulls
       for (let column = 0; column < 8; column++) {
         const checker = new Checker();
-        this.grid[row].push(checker);
+
+
+        this.grid[row].push(null);
+
+
       }
+
     }
-  };
+  }
 
   // prints out the board
-  this.viewGrid = function() {
+  viewGrid() {
     // add our column numbers
     let string = "  0 1 2 3 4 5 6 7\n";
     for (let row = 0; row < 8; row++) {
@@ -41,7 +54,7 @@ function Board() {
         // if the location is "truthy" (contains a checker piece, in this case)
         if (this.grid[row][column]) {
           // push the symbol of the check in that location into the array
-          rowOfCheckers.push(this.grid[row][column].symbol);
+          rowOfCheckers.push(this.grid[row][column]);
         } else {
           // just push in a blank space
           rowOfCheckers.push(' ');
@@ -53,18 +66,131 @@ function Board() {
       string += "\n";
     }
     console.log(string);
-  };
+  }
 
-  // Your code here
+  playerStartingPositions() {
+    const checker = new Checker();
+    const p1 = checker.symbol2;
+    const p2 = checker.symbol1;
+    this.grid.forEach((row, index) => {
+      if (index % 2 === 0 && index < 3) {
+        this.grid[index] = [null, p1, null, p1, null, p1, null, p1];
+      } else if (index > 2 && index < 5) {
+        this.grid[index] = [null, null, null, null, null, null, null, null];
+      } else if (index % 2 === 0 && index > 4) {
+        this.grid[index] = [null, p2, null, p2, null, p2, null, p2];
+      } else if (index % 2 !== 0 && index < 3) {
+        this.grid[index] = [p1, null, p1, null, p1, null, p1, null];
+      } else if (index % 2 !== 0 && index > 4) {
+        this.grid[index] = [p2, null, p2, null, p2, null, p2, null];
+      }
+    })
+    console.log(this.grid);
+  }
+
 }
-function Game() {
 
-  this.board = new Board();
+class Game {
+  constructor() {
 
-  this.start = function() {
+    this.board = new Board();
+    this.playerTurn = 'A';
+    this.player1ClaimedPieces = 0;
+    this.player2ClaimedPieces = 0;
+  }
+  start() {
     this.board.createGrid();
+
     // Your code here
-  };
+    this.board.playerStartingPositions();
+
+  }
+  stringToNumber(str) {
+    str = str.split('');
+    str.forEach((item) => {
+      parseInt(item);
+    })
+    return str;
+  }
+  moveChecker(whichPiece, toWhere) {
+    whichPiece = whichPiece.split('').map(Number);
+    toWhere = toWhere.split('').map(Number);
+    if (this.isLegalMove(whichPiece, toWhere) && this.jumpedPiece(whichPiece, toWhere)) {
+      if (this.playerTurn === 'A') {
+        if (whichPiece[1] < toWhere[1]) {
+          this.board.grid[toWhere[0]-1][toWhere[1]-1] = null;
+        } else if (whichPiece[1] > toWhere[1]) {
+          this.board.grid[toWhere[0]-1][toWhere[1]+1] = null;
+        }
+        this.board.grid[whichPiece[0]][whichPiece[1]] = null;
+        this.board.grid[toWhere[0]][toWhere[1]] = this.playerTurn;
+        this.player1ClaimedPieces ++;
+        this.playerTurn = 'B'
+        console.log(this.board.grid);
+        // console.log(game.board.checkers.length);
+        console.log(this.player1ClaimedPieces);
+
+      } else {
+        if (whichPiece[1] < toWhere[1]) {
+          this.board.grid[toWhere[0]+1][toWhere[1]-1] = null;
+        } else if (whichPiece[1] > toWhere[1]) {
+          this.board.grid[toWhere[0]+1][toWhere[1]+1] = null;
+        }
+        this.board.grid[whichPiece[0]][whichPiece[1]] = null;
+        this.board.grid[toWhere[0]][toWhere[1]] = this.playerTurn;
+        this.player2ClaimedPieces ++;
+        this.playerTurn = 'A'
+        console.log(this.board.grid);
+        console.log(this.player2ClaimedPieces);
+
+
+      }
+    } else if (this.isLegalMove(whichPiece, toWhere)) {
+      if (this.playerTurn === 'A') {
+        this.board.grid[whichPiece[0]][whichPiece[1]] = null;
+        this.board.grid[toWhere[0]][toWhere[1]] = this.playerTurn;
+        this.playerTurn = 'B'
+        console.log(this.board.grid);
+        console.log(game.board.checkers.length);
+
+      } else {
+        this.board.grid[whichPiece[0]][whichPiece[1]] = null;
+        this.board.grid[toWhere[0]][toWhere[1]] = this.playerTurn;
+        this.playerTurn = 'A'
+        console.log(this.board.grid);
+
+      }
+    }
+
+  }
+  jumpedPiece(whichPiece, toWhere) {
+    if(this.playerTurn === 'A' &&
+      toWhere[0] - whichPiece[0] === 2 &&
+      !this.board.grid[toWhere[0]][toWhere[1]]) {
+      return true;
+    } else if (this.playerTurn === 'B' &&
+      whichPiece[0] - toWhere[0] === 2 &&
+      !this.board.grid[toWhere[0]][toWhere[1]]) {
+        return true;
+      } else {
+        return false;
+      }
+  }
+  isLegalMove(whichPiece, toWhere) {
+    if (this.playerTurn === 'A' &&
+      whichPiece[0] < toWhere[0] &&
+      !this.board.grid[toWhere[0]][toWhere[1]]) {
+      return true;
+    } else if (this.playerTurn === 'B' &&
+      whichPiece[0] > toWhere[0] &&
+      !this.board.grid[toWhere[0]][toWhere[1]]) {
+      return true;
+    } else {
+      console.log('Unable to move.', whichPiece[0], whichPiece);
+
+      return false;
+    }
+  }
 }
 
 function getPrompt() {
@@ -93,8 +219,8 @@ if (typeof describe === 'function') {
     });
   });
 
-  describe('Game.moveChecker()', function () {
-    it('should move a checker', function () {
+  describe('Game.moveChecker()', function() {
+    it('should move a checker', function() {
       assert(!game.board.grid[4][1]);
       game.moveChecker('50', '41');
       assert(game.board.grid[4][1]);
