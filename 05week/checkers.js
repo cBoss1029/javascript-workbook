@@ -58,11 +58,6 @@ class Board {
           // push the symbol of the check in that location into the array
 
           rowOfCheckers.push(this.grid[row][column]);
-          // checkers.push(this.grid[row][column]);
-
-        // } else if (this.grid.indexOf(this.grid[row]) > 4 && this.grid[row][column]) {
-        //   rowOfCheckers.push(this.grid[row][column].symbol2);
-          // checkers.push(this.grid[row][column]);
 
 
         } else {
@@ -77,27 +72,12 @@ class Board {
       string += "\n";
     }
     console.log(string);
-    console.log(this.checkers.length)
   }
 
-
+  //Everything works, but I am aware it is in need of some serious refactoring.
+  //which I will do in the future.  I am very tired.
   playerStartingPositions() {
     const checker = new Checker();
-    // const p1 = checker;
-    // const p2 = checker.symbol1;
-    // this.grid.forEach((row, index) => {
-    //   if (index % 2 === 0 && index < 3) {
-    //     this.grid[index] = [null, checker, null, checker, null, checker, null, checker];
-    //   } else if (index % 2 !== 0 && index < 3) {
-    //     this.grid[index] = [checker, null, checker, null, checker, null, checker, null];
-    //   } else if (index > 2 && index < 5) {
-    //     this.grid[index] = [null, null, null, null, null, null, null, null];
-    //   } else if (index % 2 === 0 && index > 4) {
-    //     this.grid[index] = [null, checker, null, checker, null, checker, null, checker];
-    //   } else if (index % 2 !== 0 && index > 4) {
-    //     this.grid[index] = [checker, null, checker, null, checker, null, checker, null];
-    //   }
-    // })
 
     this.grid.forEach((row, index1) => {
       row.forEach((column, index2) => {
@@ -124,8 +104,6 @@ class Board {
         }
       })
 
-      // console.log(this.grid);
-      // console.log(this.checkers);
     })
 
   }
@@ -136,8 +114,12 @@ class Game {
 
     this.board = new Board();
     this.playerTurn = 'B';
+    /*be aware (and I'm not sure how this happened) player 'B' is player 1 and is represented
+                                 on the board as 'A', and vice versa.*/
     this.player1ClaimedPieces = 0;
     this.player2ClaimedPieces = 0;
+    this.player1IllegalMoves = 0;
+    this.player2IllegalMoves = 0;
   }
   start() {
     this.board.createGrid();
@@ -151,38 +133,32 @@ class Game {
     whichPiece = whichPiece.split('').map(Number);
     toWhere = toWhere.split('').map(Number);
     if (this.isLegalMove(whichPiece, toWhere) && this.jumpedPiece(whichPiece, toWhere)) {
-      if (this.playerTurn === 'A') {
-        if (whichPiece[1] < toWhere[1]) {
+      if (this.playerTurn === 'A') { //if player 2 jumps. . .
+        if (whichPiece[1] < toWhere[1]) { //. . .down and to the right
           this.board.grid[toWhere[0] - 1][toWhere[1] - 1] = null;
-        } else if (whichPiece[1] > toWhere[1]) {
+        } else if (whichPiece[1] > toWhere[1]) { //. . .or down and to the left
           this.board.grid[toWhere[0] - 1][toWhere[1] + 1] = null;
-        }
-        this.board.grid[toWhere[0]][toWhere[1]] = this.board.grid[whichPiece[0]][whichPiece[1]];
-        this.board.grid[whichPiece[0]][whichPiece[1]] = null;
-        this.player1ClaimedPieces++;
-        this.board.checkers.shift();
-        this.playerTurn = 'B'
-        console.log(this.board.grid);
-        // console.log(game.board.checkers.length);
-        console.log(this.player1ClaimedPieces);
-        console.log("checkers :", this.board.checkers.length);
-
-      } else {
-        if (whichPiece[1] < toWhere[1]) {
-          this.board.grid[toWhere[0] + 1][toWhere[1] - 1] = null;
-        } else if (whichPiece[1] > toWhere[1]) {
-          this.board.grid[toWhere[0] + 1][toWhere[1] + 1] = null;
         }
         this.board.grid[toWhere[0]][toWhere[1]] = this.board.grid[whichPiece[0]][whichPiece[1]];
         this.board.grid[whichPiece[0]][whichPiece[1]] = null;
         this.player2ClaimedPieces++;
         this.board.checkers.shift();
+        this.playerTurn = 'B'
+        this.player2IllegalMoves = 0;
+
+
+      } else { // player 1
+        if (whichPiece[1] < toWhere[1]) { //. . .up and to the right
+          this.board.grid[toWhere[0] + 1][toWhere[1] - 1] = null;
+        } else if (whichPiece[1] > toWhere[1]) { //. . .up and to the left
+          this.board.grid[toWhere[0] + 1][toWhere[1] + 1] = null;
+        }
+        this.board.grid[toWhere[0]][toWhere[1]] = this.board.grid[whichPiece[0]][whichPiece[1]];
+        this.board.grid[whichPiece[0]][whichPiece[1]] = null;
+        this.player1ClaimedPieces++;
+        this.board.checkers.shift();
         this.playerTurn = 'A'
-        console.log(this.board.grid);
-        console.log(this.player2ClaimedPieces);
-        console.log('checkers:', this.board.checkers.length);
-
-
+        this.player1IllegalMoves = 0;
 
 
       }
@@ -191,17 +167,21 @@ class Game {
         this.board.grid[toWhere[0]][toWhere[1]] = this.board.grid[whichPiece[0]][whichPiece[1]];
         this.board.grid[whichPiece[0]][whichPiece[1]] = null;
         this.playerTurn = 'B'
-        console.log(this.board.grid);
-        console.log(game.board.checkers.length);
+        this.player2IllegalMoves = 0;
 
       } else {
         this.board.grid[toWhere[0]][toWhere[1]] = this.board.grid[whichPiece[0]][whichPiece[1]];
         this.board.grid[whichPiece[0]][whichPiece[1]] = null;
         this.playerTurn = 'A'
-        console.log(this.board.grid);
-
+        this.player1IllegalMoves = 0;
 
       }
+    } else {
+      console.log('Unable to move.');
+
+      this.playerIllegalMoveCounter(whichPiece, toWhere);
+      this.checkForWin();
+
     }
 
   }
@@ -228,10 +208,45 @@ class Game {
       !this.board.grid[toWhere[0]][toWhere[1]]) {
       return true;
     } else {
-      console.log('Unable to move.', whichPiece[0], whichPiece);
 
       return false;
     }
+  }
+  playerIllegalMoveCounter(whichPiece, toWhere) {
+    const legalMove = this.isLegalMove(whichPiece, toWhere);
+    if (this.playerTurn === 'A' && !legalMove) {
+      this.player2IllegalMoves++;
+      console.log(this.player2IllegalMoves, 'p2 illegal moves');
+    } else if (this.playerTurn === 'B' && !legalMove) {
+      this.player1IllegalMoves++;
+      console.log(this.player1IllegalMoves, 'p1 illegal moves');
+
+    }
+  }
+  checkForWin() {
+    if (this.playerTurn === 'A' && this.player2ClaimedPieces === 12) {
+      console.log('Player 2 wins!!');
+      this.resetGame();
+    } else if (this.playerTurn === 'A' && this.player2IllegalMoves === 12 - this.player1ClaimedPieces) {
+      console.log('Player 1 wins!!');
+      this.resetGame();
+    } else if (this.playerTurn === 'B' && this.player1ClaimedPieces === 12) {
+      console.log('Player 1 wins!!');
+      this.resetGame();
+    } else if (this.playerTurn === 'B' && this.player1IllegalMoves === 12 - this.player2ClaimedPieces) {
+      console.log('Player 2 wins!!');
+      this.resetGame();
+    }
+  }
+  resetGame() {
+    this.playerTurn = 'B';
+    this.player1ClaimedPieces = 0;
+    this.player2ClaimedPieces = 0;
+    this.player1IllegalMoves = 0;
+    this.player2IllegalMoves = 0;
+    this.board.createGrid();
+    this.board.playerStartingPositions();
+
   }
 }
 
