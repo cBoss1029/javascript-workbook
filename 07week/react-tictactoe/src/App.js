@@ -3,8 +3,17 @@ import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      board: [
+        ['X', 'O', 'X'],
+        ['X', 'O', 'X'],
+        ['O', 'X', 'O']
+      ]
 
-
+    }
+  }
 
 
   render() {
